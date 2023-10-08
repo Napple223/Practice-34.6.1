@@ -36,12 +36,12 @@ func main() {
 	defer inputFile.Close()
 	fileReader := bufio.NewReader(inputFile)
 	fileWriter := bufio.NewWriter(outputFile)
+	re := regexp.MustCompile(`([0-9]+)+([\+-/\*])+([0-9]+)=`)
 	for {
 		line, _, err := fileReader.ReadLine()
 		if err != nil {
 			break
 		}
-		re := regexp.MustCompile(`([0-9]+)+([\+-/\*])+([0-9]+)=`)
 		sub := re.FindAllStringSubmatch(string(line), -1)
 		if len(sub) == 0 {
 			continue
