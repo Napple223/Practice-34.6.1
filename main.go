@@ -41,7 +41,7 @@ func main() {
 		if err != nil {
 			break
 		}
-		re := regexp.MustCompile(`([0-9]+)+([\+-])+([0-9+])=`)
+		re := regexp.MustCompile(`([0-9]+)+([\+-/\*])+([0-9]+)=`)
 		sub := re.FindAllStringSubmatch(string(line), -1)
 		if len(sub) == 0 {
 			continue
@@ -58,6 +58,23 @@ func main() {
 			s, _ := strconv.Atoi(sub[0][3])
 			res := f - s
 			output := sub[0][1] + sub[0][2] + sub[0][3] + "=" + strconv.Itoa(res) + "\n"
+			_, _ = fileWriter.WriteString(output)
+		case sub[0][2] == "*":
+			f, _ := strconv.ParseFloat(sub[0][1], 64)
+			s, _ := strconv.ParseFloat(sub[0][3], 64)
+			res := f * s
+			output := sub[0][1] + sub[0][2] + sub[0][3] + "=" + fmt.Sprintf("%.0f", res) + "\n"
+			_, _ = fileWriter.WriteString(output)
+		case sub[0][2] == "/":
+			f, _ := strconv.ParseFloat(sub[0][1], 64)
+			s, _ := strconv.ParseFloat(sub[0][3], 64)
+			var output string
+			if s == 0 {
+				output = sub[0][1] + sub[0][2] + sub[0][3] + "=" + "делить на ноль нельзя" + "\n"
+			} else {
+				res := f / s
+				output = sub[0][1] + sub[0][2] + sub[0][3] + "=" + fmt.Sprintf("%.0f", res) + "\n"
+			}
 			_, _ = fileWriter.WriteString(output)
 		}
 	}
